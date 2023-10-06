@@ -6,7 +6,7 @@ use React\Promise\Deferred;
 
 class Page {
 
-    protected int $pageid;
+    protected  $pageid;
 
     public function __construct(int $pageid)
     {

@@ -5,6 +5,7 @@ namespace Sudhaus7\WizardServer;
 use FastRoute\Dispatcher;
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\RouteCollector;
+use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use RingCentral\Psr7\Response;
 
@@ -16,6 +17,11 @@ class Router {
         $this->dispatcher = new GroupCountBased($routes->getData());
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return Response
+     */
     public function __invoke(ServerRequestInterface $request)
     {
         $routeInfo = $this->dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
@@ -30,7 +36,7 @@ class Router {
                 return $routeInfo[1]($request, ... array_values($params));
         }
 
-        throw new \LogicException('Something wrong with routing',1696604280);
+        throw new LogicException('Something wrong with routing',1696604280);
     }
 
 }

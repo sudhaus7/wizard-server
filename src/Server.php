@@ -2,6 +2,7 @@
 
 namespace Sudhaus7\WizardServer;
 
+use Exception;
 use FastRoute\DataGenerator\GroupCountBased;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std;
@@ -14,6 +15,8 @@ use React\Socket\SocketServer;
 use Sudhaus7\WizardServer\MiddleWare\LoggingMiddleware;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Dotenv\Exception\PathException;
+use function method_exists;
+use const PHP_EOL;
 
 class Server {
     public function __invoke($envfile = '')
@@ -21,7 +24,9 @@ class Server {
 
         try {
             $dotenv = new Dotenv();
-            $dotenv->usePutenv( true );
+            if ( method_exists( $dotenv, 'usePutenv')) {
+                $dotenv->usePutenv( true );
+            }
             $dotenv->load( $envfile );
         } catch( PathException $e) {
             // we assume the environment variables are set
@@ -39,6 +44,7 @@ class Server {
 
 
         $treeAction = function ( ServerRequestInterface $request,int $id) use ($db) {
+
             $tree = new Maketree( $id );
             return $tree->fetch()->then(function($result) {
                 return Response::json($result);
@@ -72,16 +78,25 @@ class Server {
         $routes->get('/page/{id:\d+}', $pageAction);
         $routes->get('/content/{table:\S+}/{field:\S+}/{id:\d+}', $contentAction);
         $routes->get('/content/{table:\S+}/{id:\d+}', $contentActionSingle);
-
+        $routes->get('/', function() {
+            return Response::json( ['hello'=>'world']);
+        });
         $server = new HttpServer(
             new MiddleWare\AccessMiddleware(),
             new MiddleWare\LoggingMiddleware(),
-            new \Sudhaus7\WizardServer\Router( $routes)
+            new Router( $routes)
         );
 
-        $socket = new SocketServer(getenv('WIZARD_SERVER_HOST').':'.getenv('WIZARD_SERVER_PORT'), [],$loop);
-        $server->listen($socket);
 
-        $loop->run();
+        try {
+            $socket = new SocketServer( getenv( 'WIZARD_SERVER_HOST' ) . ':' . getenv( 'WIZARD_SERVER_PORT' ), [],
+                $loop );
+            $server->listen( $socket );
+            echo "Server startet ".getenv('WIZARD_SERVER_HOST').':'.getenv('WIZARD_SERVER_PORT') . PHP_EOL;
+            $loop->run();
+        } catch( Exception $e) {
+            echo 'ERROR: '.$e->getMessage() . PHP_EOL;
+        }
+
     }
 }
