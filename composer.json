@@ -1,0 +1,22 @@
+{
+	"config": {
+		"optimize-autoloader": true,
+		"sort-packages": true,
+		"platform": {
+			"php": "7.4.10"
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"Sudhaus7\\WizardServer\\": "src/"
+		}
+	},
+    "require": {
+		"php": ">=7.4",
+		"nikic/fast-route": "^1.3",
+		"react/http": "^1.9",
+		"react/mysql": "^0.5.7",
+		"react/socket": "^1.14",
+		"symfony/dotenv": "*"
+	}
+}
