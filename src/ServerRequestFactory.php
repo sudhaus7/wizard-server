@@ -18,8 +18,8 @@ class ServerRequestFactory {
     {
 
         $serverArray = $_SERVER;
-        if (isset($serverArray['PHP_SELF']) && strpos($serverArray['REQUEST_URI'],$serverArray['PHP_SELF']) === 0) {
-            $serverArray['REQUEST_URI'] = substr($serverArray['REQUEST_URI'],strlen($serverArray['PHP_SELF']));
+        if (isset($serverArray['PHP_SELF']) && strpos($serverArray['REQUEST_URI'],$serverArray['SCRIPT_NAME']) === 0) {
+            $serverArray['REQUEST_URI'] = substr($serverArray['REQUEST_URI'],strlen($serverArray['SCRIPT_NAME']));
         }
 
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
