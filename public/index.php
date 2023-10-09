@@ -1,8 +1,7 @@
 <?php
 
-use Sudhaus7\WizardServer\Simple;
+$path = realpath(__DIR__.'/../vendor/autoload.php');
+require($path);
 
-require '../vendor/autoload.php';
-
-$server = new Simple();
+$server = new \Sudhaus7\WizardServer\Simple();
 $server(realpath( __DIR__.'/../.env'));
