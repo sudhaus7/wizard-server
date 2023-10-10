@@ -66,4 +66,61 @@ class Content {
             return Response::json( $rows );
         }
     }
+
+    public function fetchComplex(string $table, array $config)
+    {
+        if ($this->db) {
+            $w = [];
+            foreach($config as $k=>$v) {
+                $w[]= ' `'.$k.'`=? ';
+            }
+            $sql = sprintf('select * from %s where %s',$table,implode(" AND ",$w));
+            return $this->db->query( $sql, $config )
+                            ->then( function ( QueryResult $queryResult ) {
+                                $rows = $queryResult->resultRows ? $queryResult->resultRows : [];
+                                foreach ( $rows as $idx => $row ) {
+                                    foreach ( $row as $key => $value ) {
+                                        if ( MathUtility::canBeInterpretedAsFloat( $value ) ) {
+                                            $rows[ $idx ][ $key ] = (float) $value;
+                                        }
+                                        if ( MathUtility::canBeInterpretedAsInteger( $value ) ) {
+                                            $rows[ $idx ][ $key ] = (int) $value;
+                                        }
+                                    }
+                                }
+
+                                return Response::json( $rows );
+                            }, function () {
+                                return Response::json( [] );
+                            } );
+        } else {
+            $rows = [];
+            try {
+                $w = [];
+                foreach($config as $k=>$v) {
+                    $w[]= ' `'.$k.'`=:'.$k.' ';
+                }
+                $sql = sprintf('select * from %s where %s',$table,implode(" AND ",$w));
+                $pdo  = Database::getConnection();
+                $stmt = $pdo->prepare( $sql );
+                $stmt->execute( $config );
+                $rows = $stmt->fetchAll( PDO::FETCH_ASSOC );
+                foreach ( $rows as $idx => $row ) {
+                    foreach ( $row as $key => $value ) {
+                        if ( MathUtility::canBeInterpretedAsFloat( $value ) ) {
+                            $rows[ $idx ][ $key ] = (float) $value;
+                        }
+                        if ( MathUtility::canBeInterpretedAsInteger( $value ) ) {
+                            $rows[ $idx ][ $key ] = (int) $value;
+                        }
+                    }
+                }
+            } catch ( Exception $e) {
+
+            }
+
+            return Response::json( $rows );
+        }
+
+    }
 }

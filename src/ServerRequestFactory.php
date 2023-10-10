@@ -35,6 +35,11 @@ class ServerRequestFactory {
 
         if (!is_array($headers)) {
             $headers = [];
+            foreach($_SERVER as $key=>$value) {
+                if (strpos($key,'HTTP_') === 0) {
+                    $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))))] = $value;
+                }
+            }
         }
 
         // Cache the php://input stream as it cannot be re-read
