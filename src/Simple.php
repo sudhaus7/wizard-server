@@ -72,7 +72,8 @@ class Simple {
 
         $contentActionComplex = function (ServerRequestInterface $request, string $table) {
             $content = new Content(  );
-            return  $content->fetchComplex($table,$request->getParsedBody());
+
+            return  $content->fetchComplex($table,$_POST);
         };
 
         $routes = new RouteCollector(new Std(), new GroupCountBased());

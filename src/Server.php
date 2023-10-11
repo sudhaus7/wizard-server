@@ -89,7 +89,7 @@ class Server {
         $contentActionComplex = function (ServerRequestInterface $request, string $table) use ($db) {
             $content = new Content( $db );
 
-            return  $content->fetchComplex($table,$request->getParsedBody())->then(function($response) { return $response; });
+            return  $content->fetchComplex($table,$_POST)->then(function($response) { return $response; });
         };
 
         $routes = new RouteCollector(new Std(), new GroupCountBased());

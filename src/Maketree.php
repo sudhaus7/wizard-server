@@ -36,7 +36,7 @@ class Maketree
     private function runForPid(int $pid)
     {
         $pdo = Database::getConnection();
-        $stmt = $pdo->prepare( 'SELECT uid FROM pages where pid=:pid');
+        $stmt = $pdo->prepare( 'SELECT uid FROM pages where pid=:pid and deleted=0');
         $stmt->execute(['pid'=>$pid]);
         while ($row = $stmt->fetch( PDO::FETCH_ASSOC)) {
             $this->result[] = (int)$row['uid'];

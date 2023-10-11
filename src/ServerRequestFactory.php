@@ -43,11 +43,15 @@ class ServerRequestFactory {
         }
 
         // Cache the php://input stream as it cannot be re-read
-        $cacheResource = fopen('php://temp', 'wb+');
+        //$cacheResource = fopen('php://temp', 'wb+');
         //$cache = $cacheResource ? new Stream($cacheResource) : null;
 
-        $body = (new StreamFactory())->createStreamFromFile('php://input', 'r');
 
+
+        $body = (new StreamFactory())->createStreamFromFile('php://input', 'r');
+        //\fwrite( $cacheResource, $body->getContents());
+        //\fseek( $cacheResource, 0);
+        //$cache->write( $body->getContents());
         $request = new ServerRequest($method, $uri, $headers, $body,'1.1',$serverArray);
         $contentTypes = $request->getHeader('Content-Type');
 

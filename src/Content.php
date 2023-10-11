@@ -18,10 +18,12 @@ class Content {
 
     public function fetch(string $table, int $id, string $field = 'uid')
     {
-
+        $fields = Database::getTableFields($table);
         if ($this->db) {
             $sql = sprintf('select * from %s where %s=?',$table, $field);
-
+            if (\in_array( 'deleted', $fields)) {
+                $sql .= ' AND deleted=0';
+            }
             return $this->db->query( $sql, [ $id ] )
                             ->then( function ( QueryResult $queryResult ) {
                                 $rows = $queryResult->resultRows ? $queryResult->resultRows : [];
@@ -44,7 +46,9 @@ class Content {
             $rows = [];
             try {
                 $sql = sprintf( 'select * from %s where %s=:id', $table, $field );
-
+                if (\in_array( 'deleted', $fields)) {
+                    $sql .= ' AND deleted=0';
+                }
                 $pdo  = Database::getConnection();
                 $stmt = $pdo->prepare( $sql );
                 $stmt->execute( [ 'id' => $id ] );
@@ -74,6 +78,10 @@ class Content {
             foreach($config as $k=>$v) {
                 $w[]= ' `'.$k.'`=? ';
             }
+            $fields = Database::getTableFields($table);
+            if (\in_array( 'deleted', $fields)) {
+                $w[] = ' deleted=0 ';
+            }
             $sql = sprintf('select * from %s where %s',$table,implode(" AND ",$w));
             return $this->db->query( $sql, $config )
                             ->then( function ( QueryResult $queryResult ) {
@@ -100,7 +108,12 @@ class Content {
                 foreach($config as $k=>$v) {
                     $w[]= ' `'.$k.'`=:'.$k.' ';
                 }
+                $fields = Database::getTableFields($table);
+                if (\in_array( 'deleted', $fields)) {
+                    $w[] = ' deleted=0 ';
+                }
                 $sql = sprintf('select * from %s where %s',$table,implode(" AND ",$w));
+                //var_dump($sql);exit;
                 $pdo  = Database::getConnection();
                 $stmt = $pdo->prepare( $sql );
                 $stmt->execute( $config );

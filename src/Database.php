@@ -11,6 +11,19 @@ class Database {
         return $pdo;
     }
 
+    public function getTableFields(string $table)
+    {
+        $pdo = self::getConnection();
+        $sql = 'describe '.$table;
+        $stmt = $pdo->prepare( $sql );
+        $stmt->execute();
+        $result = [];
+        while($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+            $result[] = $row[0];
+        }
+        return $result;
+    }
+
     public static function getRecord(string $table, int $uid, string $field='uid',bool $adddeleted = true)
     {
         $pdo = self::getConnection();
