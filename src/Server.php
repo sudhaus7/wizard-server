@@ -73,6 +73,13 @@ class Server {
             });
         };
 
+
+        $filelistAction = function( ServerRequestInterface $request,int $id) use ($db)
+        {
+            $content = new Filelist( $db );
+            return $content->fetch($id)->then(function($response) { return $response; });
+        };
+
         $contentActionSingle = function( ServerRequestInterface $request, string $table,  int $id) use ($db)
         {
             $content = new Content( $db );
@@ -95,6 +102,7 @@ class Server {
         $routes = new RouteCollector(new Std(), new GroupCountBased());
         $routes->get('/tables', $tableAction);
         $routes->get('/tree/{id:\d+}', $treeAction);
+        $routes->get('/filelist/{id:\d+}', $filelistAction);
         $routes->get('/page/{id:\d+}', $pageAction);
         $routes->get('/content/{table:\S+}/{field:\S+}/{id:\d+}', $contentAction);
         $routes->get('/content/{table:\S+}/{id:\d+}', $contentActionSingle);

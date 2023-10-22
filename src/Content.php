@@ -29,6 +29,18 @@ class Content {
                                 $rows = $queryResult->resultRows ? $queryResult->resultRows : [];
                                 foreach ( $rows as $idx => $row ) {
                                     foreach ( $row as $key => $value ) {
+                                        if ($table==='tt_address' && strpos($key,'tx_cal_controller_')!==false) {
+                                            unset($rows[ $idx ][ $key ]);
+                                            continue;
+                                        }
+                                        if ($table==='tt_address' && strpos($key,'tx_odsajaxmailsubscription_')!==false) {
+                                            unset($rows[ $idx ][ $key ]);
+                                            continue;
+                                        }
+                                        if ($table==='tt_address' && strpos($key,'module_sys_dmail_')!==false) {
+                                            unset($rows[ $idx ][ $key ]);
+                                            continue;
+                                        }
                                         if ( MathUtility::canBeInterpretedAsFloat( $value ) ) {
                                             $rows[ $idx ][ $key ] = (float) $value;
                                         }
@@ -55,6 +67,18 @@ class Content {
                 $rows = $stmt->fetchAll( PDO::FETCH_ASSOC );
                 foreach ( $rows as $idx => $row ) {
                     foreach ( $row as $key => $value ) {
+                        if ($table==='tt_address' && strpos($key,'tx_cal_controller_')!==false) {
+                            unset($rows[ $idx ][ $key ]);
+                            continue;
+                        }
+                        if ($table==='tt_address' && strpos($key,'tx_odsajaxmailsubscription_')!==false) {
+                            unset($rows[ $idx ][ $key ]);
+                            continue;
+                        }
+                        if ($table==='tt_address' && strpos($key,'module_sys_dmail_')!==false) {
+                            unset($rows[ $idx ][ $key ]);
+                            continue;
+                        }
                         if ( MathUtility::canBeInterpretedAsFloat( $value ) ) {
                             $rows[ $idx ][ $key ] = (float) $value;
                         }
@@ -88,6 +112,18 @@ class Content {
                                 $rows = $queryResult->resultRows ? $queryResult->resultRows : [];
                                 foreach ( $rows as $idx => $row ) {
                                     foreach ( $row as $key => $value ) {
+                                        if ($table==='tt_address' && strpos($key,'tx_cal_controller_')!==false) {
+                                            unset($rows[ $idx ][ $key ]);
+                                            continue;
+                                        }
+                                        if ($table==='tt_address' && strpos($key,'tx_odsajaxmailsubscription_')!==false) {
+                                            unset($rows[ $idx ][ $key ]);
+                                            continue;
+                                        }
+                                        if ($table==='tt_address' && strpos($key,'module_sys_dmail_')!==false) {
+                                            unset($rows[ $idx ][ $key ]);
+                                            continue;
+                                        }
                                         if ( MathUtility::canBeInterpretedAsFloat( $value ) ) {
                                             $rows[ $idx ][ $key ] = (float) $value;
                                         }
@@ -120,6 +156,18 @@ class Content {
                 $rows = $stmt->fetchAll( PDO::FETCH_ASSOC );
                 foreach ( $rows as $idx => $row ) {
                     foreach ( $row as $key => $value ) {
+                        if ($table==='tt_address' && strpos($key,'tx_cal_controller_')!==false) {
+                            unset($rows[ $idx ][ $key ]);
+                            continue;
+                        }
+                        if ($table==='tt_address' && strpos($key,'tx_odsajaxmailsubscription_')!==false) {
+                            unset($rows[ $idx ][ $key ]);
+                            continue;
+                        }
+                        if ($table==='tt_address' && strpos($key,'module_sys_dmail_')!==false) {
+                            unset($rows[ $idx ][ $key ]);
+                            continue;
+                        }
                         if ( MathUtility::canBeInterpretedAsFloat( $value ) ) {
                             $rows[ $idx ][ $key ] = (float) $value;
                         }

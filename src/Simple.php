@@ -49,6 +49,12 @@ class Simple {
         };
 
 
+        $filelistAction = function( ServerRequestInterface $request, int $id)
+        {
+            $content = new Filelist( );
+            return $content->fetch($id);
+        };
+
         $pageAction = function( ServerRequestInterface $request,int $id)
         {
             $page = new Page( $id);
@@ -79,6 +85,7 @@ class Simple {
         $routes = new RouteCollector(new Std(), new GroupCountBased());
         $routes->get('/tables', $tableAction);
         $routes->get('/tree/{id:\d+}', $treeAction);
+        $routes->get('/filelist/{id:\d+}', $filelistAction);
         $routes->get('/page/{id:\d+}', $pageAction);
         $routes->get('/content/{table:\S+}/{field:\S+}/{id:\d+}', $contentAction);
         $routes->get('/content/{table:\S+}/{id:\d+}', $contentActionSingle);
