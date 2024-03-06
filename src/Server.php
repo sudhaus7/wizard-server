@@ -65,13 +65,20 @@ class Server {
         };
 
 
-        $pageAction = function( ServerRequestInterface $request,int $id)
-        {
-            $page = new Page( $id);
-            return $page->fetch()->then(function($result) {
-                return Response::json($result);
-            });
-        };
+	    $pageAction = function( ServerRequestInterface $request,int $id)
+	    {
+		    $page = new Page( $id);
+		    return $page->fetch()->then(function($result) {
+			    return Response::json($result);
+		    });
+	    };
+	    $siteconfigAction = function( ServerRequestInterface $request,int $id)
+	    {
+		    $siteconfig = new Siteconfig( $id);
+		    return $siteconfig->fetch()->then(function($result) {
+			    return Response::json($result);
+		    });
+	    };
 
 
         $filelistAction = function( ServerRequestInterface $request,int $id) use ($db)
@@ -98,15 +105,21 @@ class Server {
 
             return  $content->fetchComplex($table,$_POST)->then(function($response) { return $response; });
         };
+        $filtertAction = function (ServerRequestInterface $request, string $table, string $field) use ($db) {
+            $content = new Content( $db );
+            return  $content->filter($table, $field,$_POST)->then(function($response) { return $response; });
+        };
 
         $routes = new RouteCollector(new Std(), new GroupCountBased());
         $routes->get('/tables', $tableAction);
         $routes->get('/tree/{id:\d+}', $treeAction);
         $routes->get('/filelist/{id:\d+}', $filelistAction);
         $routes->get('/page/{id:\d+}', $pageAction);
-        $routes->get('/content/{table:\S+}/{field:\S+}/{id:\d+}', $contentAction);
+	    $routes->get('/siteconfig/{id:\d+}', $siteconfigAction);
+	    $routes->get('/content/{table:\S+}/{field:\S+}/{id:\d+}', $contentAction);
         $routes->get('/content/{table:\S+}/{id:\d+}', $contentActionSingle);
         $routes->post('/content/{table:\S+}', $contentActionComplex);
+        $routes->post('/filter/{table:\S+}/{field:\S+}', $filtertAction);
         $routes->get('/', function() {
             return Response::json( ['hello'=>'world']);
         });

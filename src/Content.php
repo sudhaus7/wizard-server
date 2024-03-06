@@ -95,6 +95,42 @@ class Content {
         }
     }
 
+    public function filter(string $table, string $field, array $config)
+    {
+        $result = [];
+        try {
+
+            $w = [$field.' in ('.$config['values'].')'];
+            $fields = Database::getTableFields($table);
+            if (\in_array( 'deleted', $fields)) {
+                $w[] = ' deleted=0 ';
+            }
+            $sql = sprintf('select distinct %s from %s where %s',$field, $table,implode(" AND ",$w));
+            //var_dump($sql);exit;
+            $pdo  = Database::getConnection();
+            $stmt = $pdo->prepare( $sql );
+            $stmt->execute();
+            $rows = $stmt->fetchAll( PDO::FETCH_ASSOC );
+            $result = [];
+            foreach ( $rows as $idx => $row ) {
+                foreach ( $row as $key => $value ) {
+                    if ( MathUtility::canBeInterpretedAsInteger( $value )
+                     ) {
+                        $result[] = (int) $value;
+                    } else if ( MathUtility::canBeInterpretedAsFloat( $value ) ) {
+                        $result[] = (float) $value;
+                    } else {
+                        $result[] = $value;
+                    }
+                }
+            }
+        } catch ( Exception $e) {
+
+        }
+
+        return Response::json( $result );
+    }
+
     public function fetchComplex(string $table, array $config)
     {
         if ($this->db) {

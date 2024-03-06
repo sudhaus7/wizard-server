@@ -63,6 +63,14 @@ class Simple {
             });
         };
 
+		$siteconfigAction = function( ServerRequestInterface  $request, int $id)
+		{
+			$siteconfig = new Siteconfig( $id);
+			return $siteconfig->fetch()->then(function($result) {
+				return Response::json($result);
+			});
+		};
+
         $contentActionSingle = function( ServerRequestInterface $request, string $table,  int $id)
         {
             $content = new Content( );
@@ -81,15 +89,23 @@ class Simple {
 
             return  $content->fetchComplex($table,$_POST);
         };
+        $filtertAction = function (ServerRequestInterface $request, string $table, string $field) {
+            $content = new Content(  );
+            return  $content->filter($table, $field,$_POST);
+        };
+
 
         $routes = new RouteCollector(new Std(), new GroupCountBased());
         $routes->get('/tables', $tableAction);
         $routes->get('/tree/{id:\d+}', $treeAction);
         $routes->get('/filelist/{id:\d+}', $filelistAction);
-        $routes->get('/page/{id:\d+}', $pageAction);
+	    $routes->get('/page/{id:\d+}', $pageAction);
+	    $routes->get('/siteconfig/{id:\d+}', $siteconfigAction);
         $routes->get('/content/{table:\S+}/{field:\S+}/{id:\d+}', $contentAction);
         $routes->get('/content/{table:\S+}/{id:\d+}', $contentActionSingle);
         $routes->post('/content/{table:\S+}', $contentActionComplex);
+        $routes->post('/filter/{table:\S+}/{field:\S+}', $filtertAction);
+
         $routes->get('/', function() {
             return Response::json( ['hello'=>'world']);
         });

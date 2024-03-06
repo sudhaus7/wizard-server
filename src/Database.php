@@ -11,7 +11,7 @@ class Database {
         return $pdo;
     }
 
-    public function getTableFields(string $table)
+    public static function getTableFields(string $table)
     {
         $pdo = self::getConnection();
         $sql = 'describe '.$table;
