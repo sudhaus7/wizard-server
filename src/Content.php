@@ -25,7 +25,7 @@ class Content {
                 $sql .= ' AND deleted=0';
             }
             return $this->db->query( $sql, [ $id ] )
-                            ->then( function ( QueryResult $queryResult ) {
+                            ->then( function ( QueryResult $queryResult ) use ($table) {
                                 $rows = $queryResult->resultRows ? $queryResult->resultRows : [];
                                 foreach ( $rows as $idx => $row ) {
                                     foreach ( $row as $key => $value ) {
