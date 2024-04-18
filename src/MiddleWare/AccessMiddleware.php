@@ -14,10 +14,9 @@ class AccessMiddleware {
             if (password_verify(\getenv('WIZARD_SERVER_SHARED_SECRET'), $authorization)) {
                 return $next($request);
             }
-            return new \Nyholm\Psr7\Response(403,[],'Access denied');
-
         }
+	    return new \Nyholm\Psr7\Response(403,[],'Access denied');
         //echo date('Y-m-d H:i:s') . ' ' . $request->getMethod() . ' ' . $request->getUri() . PHP_EOL;
-        return $next($request);
+        //return $next($request);
     }
 }
