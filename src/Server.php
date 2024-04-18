@@ -42,7 +42,7 @@ class Server {
 
 
         $factory = new Factory($loop);
-        $dsn = sprintf("%s:%s@%s:%d/%s",getenv('WIZARD_SERVER_DBUSER'),getenv('WIZARD_SERVER_DBPASS'),getenv('WIZARD_SERVER_DBHOST'),getenv('WIZARD_SERVER_DBPORT'),getenv('WIZARD_SERVER_DBNAME'));
+        $dsn = sprintf("%s:%s@%s:%d/%s",rawurlencode(getenv('WIZARD_SERVER_DBUSER')),rawurlencode(getenv('WIZARD_SERVER_DBPASS')),getenv('WIZARD_SERVER_DBHOST'),getenv('WIZARD_SERVER_DBPORT'),getenv('WIZARD_SERVER_DBNAME'));
         $db = $factory->createLazyConnection($dsn);
 
 
